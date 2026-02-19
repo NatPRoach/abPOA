@@ -4,6 +4,10 @@ default: abpoa
 #CC          = gcc
 OS          := $(shell uname)
 ARCH        := $(shell uname -m)
+# Allow for linking to existing libraries
+LDFLAGS := $(shell echo "${LDFLAGS}")
+# Allow for passing additional C flags
+EXISTING_C_FLAGS := $(shell echo "${CFLAGS}")
 # add -fno-tree-vectorize to avoid certain vectorization errors in O3 optimization
 # right now, we are using -O3 for the best performance, and no vectorization errors were found
 EXTRA_FLAGS = -Wall -Wno-unused-function -Wno-misleading-indentation# -fno-tree-vectorize
@@ -26,7 +30,7 @@ else
 	OPT_FLAGS = -O3
 endif
 
-CFLAGS        = $(OPT_FLAGS) $(EXTRA_FLAGS)
+CFLAGS =  $(EXISTING_C_FLAGS) $(LDFLAGS) $(OPT_FLAGS) $(EXTRA_FLAGS)
 
 # for gprof
 ifneq ($(pg),)
